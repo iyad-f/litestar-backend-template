@@ -1,0 +1,335 @@
+[project]
+name = "litestar-backend-template"
+description = "A backend template application built with Litestar"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+authors = [{ name = "Iyad" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Typing :: Typed",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+]
+dynamic = ["version"]
+dependencies = [
+  "asyncpg>=0.30.0",
+  "cryptography>=45.0.5",
+  "litestar-asyncpg>=0.5.0",
+  "litestar-granian>=0.13.0",
+  "litestar-saq>=0.5.3",
+  "litestar[jwt,redis]>=2.16.0",
+  "passlib[argon2]>=1.7.4",
+  "sonyflake>=2.0.1",
+]
+
+[project.scripts]
+app = "app.__main__:run_cli"
+
+[dependency-groups]
+linting = [
+  "asyncpg-stubs>=0.30.2",
+  "ruff>=0.12.11",
+  "types-redis>=4.6.0.20241004",
+]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.metadata]
+# direct dependency references, e.g `pip @ git+https://github.com/pypa/pip.git@master`
+allow-direct-references = true
+
+[tool.hatch.version]
+path = "src/app/__init__.py"
+
+[tool.hatch.build]
+dev-mode-dirs = ["src", "."]
+ignore-vcs = true
+sources = ["src"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [".github", "docs"]
+include = ["src/*", "tests/*", "LICENSE"]
+skip-excluded-dirs = false
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__", "build", "dist", "docs"]
+
+pythonVersion = "3.13"
+pythonPlatform = "All"
+
+
+# strict doesn't allow turning off / downgrading severity of rules
+typeCheckingMode = "standard"
+
+# type issues
+disableBytesTypePromotions = true
+strictParameterNoneValue = true
+reportMissingTypeStubs = "error"
+reportMissingModuleSource = "warning"
+reportInvalidTypeForm = "error"
+reportMissingImports = "error"
+reportUndefinedVariable = "error"
+reportInvalidTypeVarUse = "error"
+reportSelfClsParameterName = "error"
+
+reportAbstractUsage = "error"
+reportArgumentType = "error"
+reportAssertTypeFailure = "error"
+reportAssignmentType = "error"
+reportAttributeAccessIssue = "error"
+reportCallIssue = "error"
+reportGeneralTypeIssues = "error"
+reportInconsistentOverload = "error"
+reportIndexIssue = "error"
+reportInvalidTypeArguments = "error"
+reportNoOverloadImplementation = "error"
+reportOperatorIssue = "error"
+reportOptionalSubscript = "error"
+reportOptionalMemberAccess = "error"
+reportOptionalCall = "error"
+reportOptionalIterable = "error"
+reportOptionalContextManager = "error"
+reportOptionalOperand = "error"
+reportReturnType = "error"
+reportTypedDictNotRequiredAccess = "error"
+reportUnhashable = "error"
+reportUnusedExcept = "error"
+reportFunctionMemberAccess = "error"
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "error"
+reportOverlappingOverload = "error"
+reportPossiblyUnboundVariable = "error"
+reportConstantRedefinition = "error"
+reportDeprecated = "warning"
+
+reportIncompleteStub = "error"
+reportInconsistentConstructor = "error"
+reportInvalidStubStatement = "error"
+reportMatchNotExhaustive = "error"
+reportMissingParameterType = "error"
+
+reportUnknownArgumentType = "error"
+reportUnknownLambdaType = "error"
+reportUnknownMemberType = "error"
+reportUnknownParameterType = "error"
+reportUnknownVariableType = "error"
+reportUnnecessaryCast = "warning"
+
+reportCallInDefaultInitializer = "warning"
+reportMissingSuperCall = "none"
+reportPropertyTypeMismatch = "error"
+
+# other type-issues
+
+reportUntypedBaseClass = "warning"         # spec says treat this as Any
+reportUntypedClassDecorator = "warning"    # spec says (Any) -> Any
+reportUntypedFunctionDecorator = "warning" # spec says (Any) -> Any
+reportUntypedNamedTuple = "none"           # Just no.
+
+# not type issues, even if pyright and mypy offer checks as if they were
+# by calling them "Strict mode checks"
+# these are "opinionated errors with well-defined type interpretation"
+
+reportImplicitOverride = "none"
+reportMissingTypeArgument = "none"
+deprecateTypingAliases = false
+reportUnnecessaryComparison = "none"
+reportUnnecessaryContains = "none"
+reportUnnecessaryIsInstance = "none"
+reportAssertAlwaysTrue = "none"
+reportTypeCommentUsage = "none"
+
+# reasonably preventing accidents
+
+reportUnnecessaryTypeIgnoreComment = "warning"
+
+reportUnsupportedDunderAll = "error"
+reportWildcardImportFromLibrary = "error"
+reportShadowedImports = "warning"
+
+reportUninitializedInstanceVariable = "warning"
+reportUnusedCoroutine = "warning"
+reportUnusedExpression = "warning"
+
+reportPrivateUsage = "warning"
+reportPrivateImportUsage = "warning"
+
+reportInvalidStringEscapeSequence = "error"
+reportRedeclaration = "error"
+reportUnboundVariable = "error"
+
+reportUnusedClass = "warning"
+reportUnusedImport = "warning"
+reportUnusedFunction = "warning"
+reportUnusedVariable = "warning"
+
+# analysis behavior
+enableTypeIgnoreComments = true
+enableReachabilityAnalysis = true
+analyzeUnannotatedFunctions = true
+reportImportCycles = "error"
+enableExperimentalFeatures = false
+
+# inference settings
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+
+# overly-worriesome linter-esque options
+reportImplicitStringConcatenation = "none"
+reportUnusedCallResult = "none"
+reportDuplicateImport = "none"             # handled by ruff
+
+
+[tool.ruff]
+line-length = 90
+target-version = "py313"
+exclude = ["docs/"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "ANN",
+  "ASYNC",
+  "B",
+  "BLE",
+  "C4",
+  "COM",
+  "D",
+  "DOC",
+  "DTZ",
+  "E",
+  "EM",
+  "ERA",
+  "F",
+  "FA",
+  "FBT",
+  "FURB",
+  "G",
+  "I",
+  "ICN",
+  "INP",
+  "ISC",
+  "LOG",
+  "NPY",
+  "PD",
+  "PERF",
+  "PGH",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "PTH",
+  "PYI",
+  "Q",
+  "Q003",
+  "RET",
+  "RSE",
+  "RUF",
+  "S",
+  "SIM",
+  "SLOT",
+  "T20",
+  "TC",
+  "TID",
+  "TRY",
+  "UP",
+  "W",
+  "YTT",
+]
+
+ignore = [
+  "DOC201",   # Not docing generic return types
+  "DOC501",   # Not explicitly documenting raised exception types
+  "ANN202",   # implied return fine sometimes
+  "ANN401",   # Any is the correct type in some cases
+  "ASYNC116", # Long sleeps are fine
+  "B901",     # I'm aware of how generators as coroutines work
+  "B903",     # nope, handwritten types are fine actually.
+  "C90",      # mccabe complexity memes
+  "COM812",   # ruff format suggested
+  "D100",     # no, module level docs aren't always neededd
+  "D105",     # documenting magic methods is often dumb.
+  "D107",     # __init__ is the wrong place to doc this.
+  "E501",     # ruff format suggested
+  "FBT003",   # Wrong end to enforce this on.
+  "G002",     # erroneous issue with %-logging when logging can be confiured for % logging
+  "ISC001",   # ruff format suggested
+  "PLC0105",  # no, I don't like co naming style for typevars
+  "PLC0415",  # ruff gets this wrong, import needs to be not at top of file in some cases
+  "PLR0912",  # too many branches
+  "PLR0913",  # number of function arguments
+  "PLR0915",  # too many statements.... in an async entrypoint handling graceful shutdown...
+  "PLR0917",  # too many positional arguments
+  "PLR2004",  # Magic value comparison, may remove later
+  "RUF001",   # ambiguous characters not something I want to enforce here.
+  "RUF029",   # no, don't try andd tell me I'm wrong for async def when something is for an interface.
+  "S101",     # use of assert here is a known quantity, blame typing memes
+  "S311",     # Yes, I know that standard pseudo-random generators are not suitable for cryptographic purposes
+  "SIM105",   # supressable exception, I'm not paying the overhead of contextlib.supress for stylistic choices.
+  "TC001",    # I prefer to avoid if TYPE_CHECKING
+  "TC002",    # I prefer to avoid if TYPE_CHECKING
+  "TC003",    # I prefer to avoid if TYPE_CHECKING
+  "UP007",    # "Use | For Union" doesn't account for typevar tuple unpacking.
+  "UP031",    # No, I like % formatting more for some things...
+  "UP038",    # isinstance on union types... perf + type construct symmetry issues.
+  # As PYI058 modifies return values to be more narrow than they actually are
+  "PYI058", # This opinionated "fix" causes incompatabilties with things expecting a generator.
+  "RUF012", # doesnt go well with litestar,
+  "S608", # This code base uses alot of fstrings to form the query, and I am aware of when it is not safe.
+]
+unfixable = [
+  "E501", # line length handled in other ways by ruff format
+  "ERA",  # Don't delete commented out code
+]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = true
+combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "csv"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+
+[tool.ruff.lint.flake8-comprehensions]
+allow-dict-calls-with-keyword-arguments = true
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+# https://discuss.python.org/t/problems-with-typeis/55410/6
+# https://discuss.python.org/t/problems-with-typeis/55410/46
+# Until what can go into a TypeIs/TypeGuard changes, these are just dangerous.
+
+"typing.TypeIs".msg = "TypeIs is fundamentally unsafe, even when using it as described to be safe"
+"typing.TypeGuard".msg = "TypeGuard is fundamentally unsafe"
+"typing_extensions.TypeIs".msg = "TypeIs is fundamentally unsafe, even when using it as described to be safe"
+"typing_extensions.TypeGuard".msg = "TypeGuard is fundamentally unsafe"
+"typing.runtime_checkable".msg = "Runtime checkable is fundamentally unsafe."
+"typing_extensions.runtime_checkable".msg = "Runtime checkable is fundamentally unsafe."

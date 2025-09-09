@@ -1,0 +1,10 @@
+[
+  {
+    "name": "User",
+    "description": "Standard user with access to basic features and personal data."
+  },
+  {
+    "name": "Admin",
+    "description": "Administrator with full access to manage users, settings, and system data."
+  }
+]

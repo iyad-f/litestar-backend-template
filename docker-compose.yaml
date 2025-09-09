@@ -1,0 +1,119 @@
+services:
+  app:
+    container_name: litestar-backend-template
+    build: .
+    restart: unless-stopped
+    depends_on:
+      database:
+        restart: true
+        condition: service_healthy
+      cache:
+        restart: true
+        condition: service_healthy
+    ports:
+      - 8000:8000
+    volumes:
+      - ./logs/:/app/logs/:rw
+    configs:
+      - source: app-config
+        target: /app/config/app.toml
+    secrets:
+      - source: postgres_password
+        target: /app/secrets/postgres_password.txt
+      - source: csrf_token
+        target: /app/secrets/csrf_token.txt
+      - source: access_token_secret
+        target: /app/secrets/access_token_secret.txt
+      - source: rate_limit_bucket_encryption_key
+        target: /app/secrets/rate_limit_bucket_encryption_key.txt
+      - source: rate_limit_bucket_encryption_nonce
+        target: /app/secrets/rate_limit_bucket_encryption_nonce.txt
+    environment:
+      - IN_DOCKER=true
+
+  database:
+    container_name: litestar-backend-template-database
+    image: postgres:17-alpine
+    restart: unless-stopped
+    tmpfs:
+      - /tmp
+      - /run/postgresql
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_READ_SEARCH
+      - FOWNER
+      - SETGID
+      - SETUID
+    read_only: true
+    security_opt:
+      - no-new-privileges=true
+    ports:
+      - 5432:5432
+    hostname: database
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=litestar-backend-template
+      - POSTGRES_USER=litestar-backend-template
+      - POSTGRES_PASSWORD_FILE=/var/run/secrets/postgres_password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgres_password
+    volumes:
+      - litestar-backend-template_db_data:/var/lib/postgresql/data
+      - ./src/app/db/migrations:/docker-entrypoint-initdb.d:ro
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "litestar-backend-template", "-U", "litestar-backend-template"]
+      interval: 3s
+      start_interval: 1s
+      retries: 5
+      timeout: 5s
+      start_period: 1m
+
+  cache:
+    container_name: litestar-backend-template-cache
+    image: valkey/valkey:8.1.3-alpine
+    ports:
+      - 6379:6379
+    hostname: cache
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - litestar-backend-template_cache_data:/data
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 3s
+      start_interval: 1s
+      timeout: 5s
+      retries: 5
+      start_period: 1m
+
+configs:
+  app-config:
+    file: ./config/app.toml
+
+volumes:
+  litestar-backend-template_db_data:
+  litestar-backend-template_cache_data:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  csrf_token:
+    file: ./secrets/csrf_token.txt
+  access_token_secret:
+    file: ./secrets/access_token_secret.txt
+  rate_limit_bucket_encryption_key:
+    file: ./secrets/rate_limit_bucket_encryption_key.txt
+  rate_limit_bucket_encryption_nonce:
+    file: ./secrets/rate_limit_bucket_encryption_nonce.txt
+    

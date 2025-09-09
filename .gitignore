@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Environments
+.venv
+.env
+
+# Secrets
+/secrets/postgres_password.txt
+/secrets/csrf_token.txt
+/secrets/access_token_secret.txt
+/secrets/rate_limit_bucket_encryption_key.txt
+/secrets/rate_limit_bucket_encryption_nonce.txt
+
+# Config
+/config/app.toml
+
+# Logs
+/logs

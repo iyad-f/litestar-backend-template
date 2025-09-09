@@ -1,0 +1,111 @@
+loc = "app.asgi:create_app"
+debug = false
+name = "litestar-backend-template"
+base_url = "/api/v1"
+authorization_header_key = "Authorization"
+
+[db]
+host = "database"
+user = "litestar-backend-template"
+db = "litestar-backend-template"
+pool_command_timeout = 30
+pool_app_state_key = "db_pool"
+pool_dependency_key = "db_pool"
+connection_dependency_key = "db_connection"
+
+[server]
+host = "0.0.0.0"
+port = 8000
+
+[logging]
+level = 10
+asgi_access_level = 30
+asgi_error_level = 20
+
+[logging.middleware]
+exclude = "\\A(?!x)x"
+exclude_opt_key = "exclude_from_logging_middleware"
+include_compressed_body = false
+logger_name = "litestar"
+request_log_message = "HTTP Request"
+response_log_message = "HTTP Response"
+request_cookies_to_obfuscate = ["session", "csrftoken"]
+request_headers_to_obfuscate = ["Authorization", "X-API-KEY", "X-CSRF-TOKEN"]
+response_cookies_to_obfuscate = ["session", "csrftoken"]
+response_headers_to_obfuscate = ["Authorization", "X-API-KEY", "X-CSRF-TOKEN"]
+request_log_fields = ["path", "method", "query", "path_params"]
+response_log_fields = ["status_code"]
+
+[cors]
+allow_origins = ["*"]
+allow_methods = ["*"]
+allow_headers = ["*"]
+allow_credentials = false
+# allow_origin_regex = null, but toml doesnt support a null value
+expose_headers = []
+max_age = 600
+
+[csrf]
+cookie_name = "csrftoken"
+cookie_path = "/"
+header_name = "X-CSRF-TOKEN"
+cookie_secure = false
+cookie_httponly = false
+cookie_samesite = "lax"
+# cookie_domain = null, not supported
+safe_methods = ["GET", "HEAD", "OPTIONS"]
+# exclude = null, not supported
+exclude_from_csrf_key = "exclude_from_csrf"
+
+[access_token]
+iss = "litestar-backend-template"
+aud = "litestar-backend-template"
+type = "Bearer"
+expiry = 5
+algorithm = "HS256"
+cookie_name = "access_token"
+blacklist_store= "auth:access_token:blacklist"
+
+[refresh_token]
+expiry = 60
+cookie_name = "refresh_token"
+
+[response_cache]
+default_expiration = 60
+
+[redis]
+url = "redis://cache:6379/0"
+socket_connect_timeout = 5
+socket_keepalive = true
+health_check_interval = 5
+
+[compression]
+backend = "gzip"
+minimum_size = 500
+gzip_compress_level = 9
+exclude = ["/docs"]
+exclude_opt_key = "exclude_from_compression"
+
+[saq]
+worker_processes = 1
+web_enabled = true
+
+[allowed_hosts]
+allowed_hosts = ["*"]
+www_redirect = true
+
+[rate_limit_middleware]
+exclude_opt_key = "exclude_from_rate_limit"
+store_key = "rate_limit"
+route_limits_key = "rate_limits"
+limit_header_key = "X-RateLimit-Limit"
+remaining_header_key = "X-RateLimit-Remaining"
+reset_header_key = "X-RateLimit-Reset"
+reset_after_header_key = "X-RateLimit-Reset-After"
+scope_header_key = "X-RateLimit-Scope"
+global_header_key = "X-RateLimit-Global"
+
+[roles]
+default_role_slug = "user"
+admin_role_slug = "admin"
+
