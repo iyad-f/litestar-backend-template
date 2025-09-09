@@ -4,7 +4,7 @@
 :license: Apache License, Version 2.0, see LICENSE for more details.
 """
 
-__title__ = "api"
+__title__ = "litestar-backend-template"
 __author__ = "Iyad"
 __license__ = "Apache-2.0"
 __copyright__ = "Copyright 2025-present Iyad"
