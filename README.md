@@ -66,7 +66,7 @@ docker compose run --rm app role init
 3. Start the application
 
 ```bash
-docker compose up -d app
+docker compose up -d
 ```
 
 ## Future Goals
