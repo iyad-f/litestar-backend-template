@@ -80,8 +80,8 @@ class MiddlewarePlugin(LitestarInitPlugin):
         )
 
         app_config.middleware.insert(0, auth_middleware)
+        app_config.middleware.insert(1, rate_limit_middleware)
         app_config.middleware.append(LITESTAR_CONFIG.logging_middleware.middleware)
-        app_config.middleware.append(rate_limit_middleware)
 
         return app_config
 
