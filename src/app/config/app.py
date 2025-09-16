@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import pathlib
-from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 from litestar.data_extractors import RequestExtractorField, ResponseExtractorField
@@ -229,7 +228,7 @@ class Config(Struct):
 
     @classmethod
     def from_toml(cls, filename: str) -> Self:
-        config_file = Path(filename).resolve()
+        config_file = pathlib.Path(filename).resolve()
         if not config_file.exists():
             msg = f"Config file not found at {str(config_file)!r}"
             raise RuntimeError(msg)
