@@ -9,7 +9,7 @@ from ._common import DB_DIR
 __all__ = ("database_group",)
 
 
-@click.group(name="database", short_help="Manage application database.")
+@click.group(name="database")
 def database_group() -> None:
     """Group of commands for managing the database."""
 
